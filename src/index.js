@@ -6,15 +6,7 @@ const app = express();
 
 app.use(express.json());
 
-const repositories = [
-  {
-    "id": "135d082a-929a-42d2-8747-2c3c9a8d7abf",
-    "title": "Repositorio Generico",
-    "url": "https://github.com/.../tree/desenvolvimento",
-    "techs": "NodeJS",
-    "likes": 0
-  }
-];
+const repositories = [];
 
 app.get("/repositories", (request, response) => {
   return response.json(repositories);
@@ -38,14 +30,9 @@ app.post("/repositories", (request, response) => {
 
 app.put("/repositories/:id", (request, response) => {
   const { id } = request.params;
-  // const updatedRepository = request.body;
-
   const {title,url,techs} = request.body;
-
-  // console.log(updatedRepository);
   
   const repositoryIndex = repositories.findIndex(repository => repository.id === id);
-  // const repo = repositories.findIndex
 
   if (repositoryIndex < 0) {
     return response.status(404).json({ error: "Repository not found" });
@@ -58,11 +45,6 @@ app.put("/repositories/:id", (request, response) => {
   findRepo.techs = techs;
   findRepo.likes = findRepo.likes;
   findRepo.id = findRepo.id;
-
- 
-  // const repository = { ...repositories[repositoryIndex], ...updatedRepository };
-  // repositories[repositoryIndex] = repository;
-
 
   return response.json(findRepo);
 });
@@ -96,8 +78,6 @@ app.post("/repositories/:id/like", (request, response) => {
 
   const likes = ++repositories[repositoryIndex].likes;
 
-
-  // return response.json('likes');
   return response.json({likes})
 });
 
