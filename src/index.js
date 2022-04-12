@@ -32,13 +32,11 @@ app.put("/repositories/:id", (request, response) => {
   const { id } = request.params;
   const {title,url,techs} = request.body;
   
-  const repositoryIndex = repositories.findIndex(repository => repository.id === id);
-
-  if (repositoryIndex < 0) {
-    return response.status(404).json({ error: "Repository not found" });
-  }
   const findRepo = repositories.find(repo =>repo.id===id);
 
+  if(!findRepo){
+    return response.status(404).json({ error: "Repository not found" });
+  }
   
   findRepo.title = title;
   findRepo.url = url;
@@ -52,14 +50,11 @@ app.put("/repositories/:id", (request, response) => {
 app.delete("/repositories/:id", (request, response) => {
   const { id } = request.params;
 
-  repositoryIndex = repositories.findIndex(repository => repository.id === id);
+  const repositoryIndex = repositories.findIndex(repository => repository.id === id);
 
-  if (repositoryIndex < 0) {
-    return response.status(404).json({ error: "Repository not found" });
-  }
   const findRepoID = repositories.find(repo => repo.id === id);
   if(!findRepoID){
-    return response.status(404).json({error: "Usuario nao encontrado pelo ID"});
+    return response.status(404).json({error: "Repository not found"});
   }
 
   repositories.splice(repositoryIndex, 1);
@@ -70,15 +65,14 @@ app.delete("/repositories/:id", (request, response) => {
 app.post("/repositories/:id/like", (request, response) => {
   const { id } = request.params;
 
-  repositoryIndex = repositories.findIndex(repository => repository.id === id);
-
-  if (repositoryIndex < 0) {
+  const findRepo = repositories.find(repo => repo.id ===id);
+  if(!findRepo){
     return response.status(404).json({ error: "Repository not found" });
   }
 
-  const likes = ++repositories[repositoryIndex].likes;
+  findRepo.likes++;
 
-  return response.json({likes})
+  return response.json(findRepo);
 });
 
 module.exports = app;
